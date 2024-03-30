@@ -1,13 +1,10 @@
 const express = require('express')
+const {register} = require('../controller/user')
 module.exports = app =>{
     
     const router = express.Router();
 
-    router.post('/phone',(req,res)=>{
-        const {name,price} = req.body
-        console.log("do it, the name of the phone is "+ name + "and the price is " + price)
-        res.send("OK")        
-    });
+    router.post('/registrarme',register);
     router.get('/getPhone',(req,res)=>{
         console.log("hola")
         const phone = [
