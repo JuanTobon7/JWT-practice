@@ -1,12 +1,25 @@
-const {db} = require('../database');
+const db = require('../database');
+const bcrypt = require('bcrypt')
 
-exports.register = async(req,res)=>{
-    const {email,password} = req.body;
-    const query = `INSERT INTO public.roles VALUES (${email}, ${password} RETURNING * `
-    try {
-        const res = await db.query(query, [email, password]);
-        console.log(res.rows[0]);
-    } catch (err) {
-        console.error(err.stack);
+exports.register = async (req, res) => {
+    const { email, password } = req.body;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password,salt);
+    console.log(hashedPassword);
+    if(await bcrypt.compare(password,hashedPassword)){
+        console.log('contraseñas coinciden');
+    }else{
+        console.log('nananan');
     }
 };
+exports.createRol = async (req,res) => {
+    const {name} = req.body;
+    const query = 'INSERT INTO public.roles (name) VALUES ($1) RETURNING *;';
+    try{
+        await db.query(query,[name]);
+        res.status(200).send('Query exitosa:');
+    }
+    catch(err){
+        console.log(err.message)
+    }
+}
