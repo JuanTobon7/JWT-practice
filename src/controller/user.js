@@ -9,7 +9,7 @@ exports.register = async (req, res) => {
     if(await bcrypt.compare(password,hashedPassword)){
         console.log('contraseñas coinciden');
     }else{
-        console.log('nananan');
+        console.log('nanana');
     }
 };
 exports.createRol = async (req,res) => {
