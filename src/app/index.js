@@ -13,6 +13,7 @@ app.use('/api', router);
 
 app.use(require('./jwt'))
 app.use(passport.initialize())
+app.use(passport.session())
 
 // Exportar la aplicación
 module.exports = app
