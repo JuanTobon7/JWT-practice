@@ -6,15 +6,24 @@ const cors = require('cors')
 const passport = require('./passport')
 
 const app = express()
-app.use(bodyParser.json())
 app.use(cors())
+app.use(bodyParser.json());
 
-const router = require('../router')(app)
-
+app.use(expressSession({
+  secret: process.env.SSR_CLIENT, // Un secreto para firmar la sesión cookie, reemplázalo con una variable de entorno o cadena
+    resave: false, // No guardar la sesión si no se modificó
+    saveUninitialized: false, // No crear sesión hasta que algo se almacene
+    cookie: {      
+      httpOnly: true // Evitar que la cookie sea accesible por JavaScript del lado del cliente
+    }
+  }));
+  
 app.use(require('./jwt'))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use('/api', router)
+
+const router = require('../router')(passport)
+app.use('/api', router);
 
 // Exportar la aplicación
 module.exports = app
