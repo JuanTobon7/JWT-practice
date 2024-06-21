@@ -22,8 +22,8 @@ exports.register = async (req, res) => {
             return res.status(400).send('el correo ya esta en uso');
         }        
 
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password,salt);
+        //const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password,10);
 
         const queryCreateUser = `INSERT INTO public.persons (id,rol_id,name,email,password) VALUES ($1,$2,$3,$4,$5) RETURNING *;`;
         await db.query(queryCreateUser,[id,rolId,name,email,hashedPassword]);        

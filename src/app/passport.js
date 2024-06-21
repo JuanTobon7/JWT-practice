@@ -1,39 +1,41 @@
 const passport = require('passport')
-const strategyAuth2_0 = require('passport-oauth2-client-password').Strategy;
+const ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy
+const user = require('../services/user')
 const customPassport = require('passport-custom')
-passport.use(new strategyAuth2_0(function(cliendID,clientSecret,done){
-    try{        
-        if(cliendSecret !== SSR_CLIENT){
-            //falta middlewares para manejar errores
-            const error = 'Cliente Incorrecto'
-            throw error
-        }
-        const client = {secret: process.env.SSR_CLIENT}
-        done(null,client)
-    }catch(error){
-        done(error)
-    }    
-}))
 
-// passport.use('refreshToken', new customPassport(async function(req,done){
-//     try{
-//         if(req.body.grant_type === 'refresh_token' && req.body.refresh_token){
-//             //const data = await
-//             if(!data){
-//                 throw new Error('informacion no encontrada')
-//             }
-//             done(null,{
-//                 userId: data.userId,
-//                 cliendId: data.cliendId
-//             })
-//         }else{
-//             const error = new Error('No compatible con refresh token')
-//             throw error
-//         }
-//     }catch(err){
-//         console.log('el error es' , err)
-//         done(err)
-//     }
-// }))
+/**
+ * @param {String} clientId Credienciales del cliente
+ * @param {String} clientSecret secreto del cliente
+ * @param {function} done Callback de la operacion
+ */
+passport.use(new ClientPasswordStrategy(
+  (client_id, client_secret, done) => {
+    try{      
+      console.log('rrr')      
+      if(client_id!==process.env.CLIENT_ID && client_secret!==SSR_CLIENT){
+        done(null,false)
+      }
+      const client ={client_id: client_id, client_secret: client_secret}
+      done(null,client)
+    }catch(err){      
+      console.log(err);
+      done(err)
+    }
+  }
+));
+console.log('despues de')
+
+
+passport.serializeUser((user, done) => {
+    done(null, user.client_id);
+  });
+  
+passport.deserializeUser(async (id, done) => {
+  const user = await user.findById(id);
+  if(user == 'id equivocado'){
+    done(user.error);
+  }
+  done(null, user);
+});
 
 module.exports = passport
