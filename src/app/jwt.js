@@ -4,20 +4,23 @@ const user = require('../services/user')
 module.exports = async function (req,res,next){
     let token
     console.log('ingresamos a token')
-    if(req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Beares'){
+    if(req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer'){
         token = req.headers.authorization.split(' ')[1]        
+        console.log(token,'\n \n \n')
     }else{
         console.log('no lo hallo: ',req.headers,' seguimos ' , req.headers.cookie)        
     }
     if(token){
         try{
             const payload = jwt.decode(token,process.env.JWT_SECRET)
-        
-            console.log('tratamos decodificar')
+            
+            console.log('tratamos decodificar: ',payload,'\n \n \n')
 
             req.payload = payload;
             req.token = token;
+            console.log('debugin here: ', {id: payload.idsr})            
             const dataUser = await user.getUser(payload.idsr);
+            console.log('debugin here1', {data: dataUser})
             if(!dataUser){
                 res.status(400).send('token erroneo')
             }{

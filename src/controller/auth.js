@@ -21,6 +21,7 @@ exports.singIn =  async(req,res) => {
             nmUsr: dataUser.name,
             ssr: process.env.SSR_CLIENT
         };
+        console.log('\n \n \n id: ', payload.idsr)
         const userId = payload.idsr;
         const token = jwt.encode(payload,process.env.JWT_SECRET,'HS256');        
         req.header = {acces_token: token,token_type: 'Bearer' ,expires_in: duration,userId}

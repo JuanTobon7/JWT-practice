@@ -15,7 +15,7 @@ module.exports = function(passport){
 
     router.post('/registrarme',controllerUser.register);
     router.post('/crearRoles',controllerUser.createRol);
-    router.post('/iniciar-sesion', log, passport.authenticate('oauth2-client-password'), controllerAuth.singIn);
+    router.post('/iniciar-sesion', log, passport.authenticate('oauth2-client-password'), controllerAuth.singIn,log);
 
     return router
 }

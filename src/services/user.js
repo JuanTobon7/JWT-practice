@@ -40,16 +40,19 @@ exports.singIn = async (email,password) => {
 exports.getUser = async(id,res) => {    
     try{        
         const query = `
-        SELECT p*,r.name FROM public.persons AS p 
+        SELECT p.*,r.name AS role_name FROM public.persons AS p 
         INNER JOIN public.roles r
         ON p.rol_id = r.id
-        WHERE p.id = $1; `;
+        WHERE p.id = $1;`;
+        console.log('query getUser')
         const result = await db.query(query,[id]);
+        console.log({result2: result})
         if(result.rows.length == 0){
             const err = new Error('Id equivocado');
             return {error: err};
         }
         const data = result.rows[0];
+        console.log({date: data})
         return {
             id: data.id,
             name: data.name,
