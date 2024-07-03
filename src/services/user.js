@@ -18,12 +18,8 @@ exports.singIn = async (email,password) => {
         if(hashedPasword !== '$2b$10$CqEPP5EGQ.Vi5JWjx6M04uQ/Z3emkchAuIFbRak9qQ55/gnUpc4P.'){ //contraseña extraida de la BD
             console.log('en efecto hay un error')
         }
-        console.log({contraseñaReal: hashedPasword})
-        console.log('pasado')
         const compare = await bcrypt.compare(password,hashedPasword)
-        console.log('reuslt: ',compare)
         if(compare){
-            console.log('coincide')
             return {
                 id: data.id,
                 name: data.name,
@@ -44,15 +40,12 @@ exports.getUser = async(id,res) => {
         INNER JOIN public.roles r
         ON p.rol_id = r.id
         WHERE p.id = $1;`;
-        console.log('query getUser')
         const result = await db.query(query,[id]);
-        console.log({result2: result})
         if(result.rows.length == 0){
             const err = new Error('Id equivocado');
             return {error: err};
         }
         const data = result.rows[0];
-        console.log({date: data})
         return {
             id: data.id,
             name: data.name,

@@ -3,7 +3,7 @@ const userService = require('../services/user');
 const moment = require('moment')
 
 exports.singIn =  async(req,res) => {
-    try{
+    try{        
         const {email,password} = req.body;
         if(!email || !password ){
             const error = new Error('Datos faltantes')
@@ -21,14 +21,11 @@ exports.singIn =  async(req,res) => {
             nmUsr: dataUser.name,
             ssr: process.env.SSR_CLIENT
         };
-        console.log('\n \n \n id: ', payload.idsr)
         const userId = payload.idsr;
-        const token = jwt.encode(payload,process.env.JWT_SECRET,'HS256');        
-        req.header = {acces_token: token,token_type: 'Bearer' ,expires_in: duration,userId}
-        console.log('header: \n',req.header)
+        const token = jwt.encode(payload,process.env.JWT_SECRET,'HS256');
+        console.log('token codificado en auth: ',token)
+        res.status(200).send({acces_token: token,token_type: 'Bearer' ,expires_in: duration,userId})
     }catch(err){
         console.log(err);
-    }finally{        
-        res.status(200).send('terminado rey, gracias')
-    }
+    }    
 }
